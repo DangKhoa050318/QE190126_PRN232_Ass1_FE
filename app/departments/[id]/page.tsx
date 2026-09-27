@@ -6,12 +6,12 @@ import { ProjectCard } from "@/components/ProjectCard";
 import { BackLink } from "@/components/ui/BackLink";
 import { ActiveBadge } from "@/components/ui/Badges";
 import { EmptyState, ErrorState, LoadingState } from "@/components/ui/States";
-import { api } from "@/lib/api";
+import { api, parseId } from "@/lib/api";
 import { useFetch } from "@/lib/useFetch";
 
 export default function DepartmentDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { data, loading, error, reload } = useFetch(() => api.departments.get(Number(id)), [id]);
+  const { data, loading, error, errorStatus, reload } = useFetch(() => api.departments.get(parseId(id, "Department")), [id]);
 
   return (
     <>
@@ -19,7 +19,7 @@ export default function DepartmentDetailPage() {
       {loading ? (
         <LoadingState label="Loading department..." />
       ) : error ? (
-        <ErrorState message={error} onRetry={reload} />
+        <ErrorState message={error} onRetry={errorStatus === 404 ? undefined : reload} />
       ) : (
         data && (
           <div className="space-y-8">

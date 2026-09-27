@@ -7,22 +7,22 @@ import { TaskList } from "@/components/TaskList";
 import { BackLink } from "@/components/ui/BackLink";
 import { ActiveBadge, ProjectStatusBadge } from "@/components/ui/Badges";
 import { EmptyState, ErrorState, LoadingState } from "@/components/ui/States";
-import { api } from "@/lib/api";
+import { api, parseId } from "@/lib/api";
 import { TASK_STATUSES } from "@/lib/constants";
 import { formatDate, formatDateTime } from "@/lib/format";
 import { useFetch } from "@/lib/useFetch";
 
 export default function ProjectDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { data, loading, error, reload } = useFetch(() => api.projects.get(Number(id)), [id]);
+  const { data, loading, error, errorStatus, reload } = useFetch(() => api.projects.get(parseId(id, "Project")), [id]);
 
   return (
     <>
-      <BackLink href={data ? `/departments/${data.departmentId}` : "/"} label={data ? data.departmentName : "Back"} />
+      <BackLink href={data ? `/departments/${data.departmentId}` : "/"} label={data ? data.departmentName : "Home"} />
       {loading ? (
         <LoadingState label="Loading project..." />
       ) : error ? (
-        <ErrorState message={error} onRetry={reload} />
+        <ErrorState message={error} onRetry={errorStatus === 404 ? undefined : reload} />
       ) : (
         data && (
           <div className="space-y-8">

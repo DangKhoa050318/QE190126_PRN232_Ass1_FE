@@ -125,6 +125,12 @@ export const api = {
   },
 };
 
+/** Parses a route id; throws a 404 ApiError for anything that is not a positive integer (e.g. /tasks/abc). */
+export function parseId(value: string, entity: string) {
+  if (!/^[1-9]\d*$/.test(value)) throw new ApiError(`${entity} with id "${value}" was not found.`, 404);
+  return Number(value);
+}
+
 export function errorMessage(error: unknown) {
   return error instanceof Error ? error.message : "Something went wrong.";
 }

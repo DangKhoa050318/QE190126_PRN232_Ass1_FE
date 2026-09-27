@@ -7,7 +7,7 @@ import { DueDate } from "@/components/TaskList";
 import { BackLink } from "@/components/ui/BackLink";
 import { ActiveBadge, PriorityBadge, TagList, TaskStatusBadge } from "@/components/ui/Badges";
 import { ErrorState, LoadingState } from "@/components/ui/States";
-import { api } from "@/lib/api";
+import { api, parseId } from "@/lib/api";
 import { formatDateTime } from "@/lib/format";
 import { useFetch } from "@/lib/useFetch";
 
@@ -22,7 +22,7 @@ function Row({ label, children }: { label: string; children: ReactNode }) {
 
 export default function TaskDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const { data: task, loading, error, reload } = useFetch(() => api.tasks.get(Number(id)), [id]);
+  const { data: task, loading, error, errorStatus, reload } = useFetch(() => api.tasks.get(parseId(id, "Task")), [id]);
 
   return (
     <>
@@ -30,7 +30,7 @@ export default function TaskDetailPage() {
       {loading ? (
         <LoadingState label="Loading task..." />
       ) : error ? (
-        <ErrorState message={error} onRetry={reload} />
+        <ErrorState message={error} onRetry={errorStatus === 404 ? undefined : reload} />
       ) : (
         task && (
           <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
