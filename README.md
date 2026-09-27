@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TaskTrack — PRN232 Assignment 1 (Frontend)
 
-## Getting Started
+Next.js 15 (App Router, TypeScript) + Tailwind CSS frontend for the Task & Team Management app.
+All pages are public and load their data from the TaskTrack API.
 
-First, run the development server:
+- **Student:** QE190126 — **Class:** PRN232
+- **Backend repo:** https://github.com/DangKhoa050318/QE190126_PRN232_Ass1_BE
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Pages
+
+| Route | Description |
+|---|---|
+| `/` | Welcome banner, summary counts, active projects as cards |
+| `/departments` | Active departments (with name search) |
+| `/departments/[id]` | Department info and its projects |
+| `/projects/[id]` | Project details and its tasks (status/priority badges, tags, due date) |
+| `/tasks` | All active tasks with a status filter |
+| `/tasks/[id]` | Every field of a task, including tags |
+| `/search` | Filter tasks by title, status, priority, project and tag — results update live |
+| `/departments/manage` | Department CRUD (modal forms, delete confirmation) |
+| `/projects/manage` | Project CRUD with filters |
+| `/tasks/manage` | Task CRUD with tag multi-select; delete is a soft delete |
+| `/tags/manage` | Tag CRUD with color picker |
+
+UI: Tailwind CSS, colored badges for status/priority, loading indicators on every API call, toast
+notifications ([sonner](https://sonner.emilkowal.ski/)) after each operation, confirmation dialogs for deletes,
+client-side validation (server field errors are shown on the matching field), responsive layout.
+
+## Project structure
+
+```
+app/          Routes (App Router)
+components/   Navbar, TaskList, ProjectCard, forms/ (modal forms), ui/ (Button, Modal, Badges, Table...)
+lib/          API client, types, constants (labels & badge colors), hooks, formatting
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Run locally
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cp .env.example .env.local   # set NEXT_PUBLIC_API_URL (default http://localhost:5000)
+npm install
+npm run dev                  # http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The backend must allow `http://localhost:3000` in CORS (it does by default).
 
-## Learn More
+## Environment variables
 
-To learn more about Next.js, take a look at the following resources:
+| Variable | Purpose |
+|---|---|
+| `NEXT_PUBLIC_API_URL` | Base URL of the backend API, e.g. `https://<your-service>.onrender.com` |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+`NEXT_PUBLIC_*` values are embedded at build time — redeploy after changing it.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deploy to Vercel
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Import this repository in Vercel (framework preset: Next.js).
+2. Add `NEXT_PUBLIC_API_URL` = your Render backend URL.
+3. Deploy, then add the Vercel URL to the backend's `FRONTEND_URL` so CORS allows it.
