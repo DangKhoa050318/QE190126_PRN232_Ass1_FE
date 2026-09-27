@@ -4,7 +4,11 @@ Next.js 15 (App Router, TypeScript) + Tailwind CSS frontend for the Task & Team 
 All pages are public and load their data from the TaskTrack API.
 
 - **Student:** QE190126 — **Class:** PRN232
+- **Live site:** https://qe190126prn232ass1.vercel.app
+- **Live API (Swagger):** https://qe190126-tasktrack-api.onrender.com/swagger
 - **Backend repo:** https://github.com/DangKhoa050318/QE190126_PRN232_Ass1_BE
+
+> The API runs on Render's free plan and sleeps when idle, so the first page load can take up to a minute.
 
 ## Pages
 
