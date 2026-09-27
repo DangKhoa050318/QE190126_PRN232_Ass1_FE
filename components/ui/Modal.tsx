@@ -18,7 +18,9 @@ const widths = { sm: "max-w-md", md: "max-w-lg", lg: "max-w-2xl" };
 export function Modal({ open, title, description, onClose, children, footer, size = "md" }: ModalProps) {
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    // A child that handles Escape itself (e.g. an open dropdown) calls preventDefault() to keep the modal open.
+    // stopPropagation() is not enough: the App Router mounts React on `document`, the same node as this listener.
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && !e.defaultPrevented && onClose();
     document.addEventListener("keydown", onKey);
     const overflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";

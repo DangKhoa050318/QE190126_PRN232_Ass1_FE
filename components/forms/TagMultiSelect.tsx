@@ -44,7 +44,7 @@ export function TagMultiSelect({ id, tags, value, onChange, invalid }: Props) {
   const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Backspace" && !query && value.length) onChange(value.slice(0, -1));
     if (e.key === "Escape" && open) {
-      e.stopPropagation();
+      e.preventDefault(); // tells the surrounding Modal not to close
       setOpen(false);
     }
     if (e.key === "Enter") {
