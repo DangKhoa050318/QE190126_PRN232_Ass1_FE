@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
+import { AuthProvider } from "@/components/auth/AuthProvider";
 import { Navbar } from "@/components/Navbar";
 import "./globals.css";
 
@@ -30,10 +31,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} min-h-screen antialiased`}>
-        <Navbar />
-        <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">{children}</main>
+        <AuthProvider>
+          <Navbar />
+          <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">{children}</main>
+        </AuthProvider>
         <footer className="border-t border-slate-200 py-6 text-center text-xs text-slate-400">
-          TaskTrack · PRN232 Assignment 1 · QE190126
+          TaskTrack · PRN232 · QE190126
         </footer>
         <Toaster richColors position="top-right" closeButton />
       </body>

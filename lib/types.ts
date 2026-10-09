@@ -55,6 +55,11 @@ export interface Task {
   isActive: boolean;
   createdDate: string;
   modifiedDate: string | null;
+  /** Audit: who created / last changed the task (null for seed data). */
+  createdById: number | null;
+  createdByName: string | null;
+  updatedById: number | null;
+  updatedByName: string | null;
   tags: Tag[];
 }
 
@@ -102,4 +107,46 @@ export interface ProjectFilters {
   status?: number;
   departmentId?: number;
   includeInactive?: boolean;
+}
+
+export type RoleName = "Admin" | "Staff";
+
+export interface Account {
+  accountId: number;
+  fullName: string;
+  email: string;
+  /** 0 = Staff, 1 = Admin */
+  role: number;
+  roleName: RoleName;
+  createdDate: string;
+}
+
+export interface AccountDetail extends Account {
+  /** Tasks created by this account; an account that created tasks cannot be deleted. */
+  createdTaskCount: number;
+}
+
+export interface AuthResponse {
+  token: string;
+  tokenType: string;
+  expiresAt: string;
+  refreshToken: string;
+  refreshTokenExpiresAt: string;
+  account: Account;
+}
+
+export interface RegisterInput {
+  fullName: string;
+  email: string;
+  password: string;
+}
+
+export interface UpdateAccountInput {
+  fullName?: string;
+  role?: number;
+}
+
+export interface ChangePasswordInput {
+  currentPassword: string;
+  newPassword: string;
 }
