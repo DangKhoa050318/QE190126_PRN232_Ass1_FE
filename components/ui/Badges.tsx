@@ -35,6 +35,14 @@ export function ActiveBadge({ active }: { active: boolean }) {
   );
 }
 
+export function RoleBadge({ role }: { role: string }) {
+  return role === "Admin" ? (
+    <Badge className="bg-violet-50 text-violet-700 ring-violet-200">Admin</Badge>
+  ) : (
+    <Badge className="bg-slate-100 text-slate-600 ring-slate-300">Staff</Badge>
+  );
+}
+
 /** Tag pill tinted with the tag's own color. Links to the search page filtered by this tag when `link` is set. */
 export function TagChip({ tag, link = false }: { tag: Tag; link?: boolean }) {
   const color = tag.color ?? DEFAULT_TAG_COLOR;
