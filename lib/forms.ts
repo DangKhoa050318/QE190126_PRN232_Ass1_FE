@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { toast } from "sonner";
-import { ApiError, errorMessage } from "./api";
+import { ApiError, errorMessage, isSessionEnded } from "./api";
 
 export type FieldErrors = Record<string, string>;
 
@@ -40,6 +40,7 @@ export function useForm<T>(initial: T, validate: (values: T) => FieldErrors) {
     try {
       await save(values);
     } catch (err) {
+      if (isSessionEnded(err)) return; // already reported; the user is being sent to /login
       if (err instanceof ApiError && Object.keys(err.fieldErrors).length) setErrors(err.fieldErrors);
       toast.error(errorMessage(err));
     } finally {

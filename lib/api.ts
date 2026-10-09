@@ -32,6 +32,8 @@ export class ApiError extends Error {
     message: string,
     public status: number,
     public fieldErrors: Record<string, string> = {},
+    /** The session ended and the user was already told and sent to /login: callers should not show it again. */
+    public sessionEnded = false,
   ) {
     super(message);
     this.name = "ApiError";
@@ -147,7 +149,7 @@ async function freshSession(force: boolean): Promise<Session> {
   const current = getSession();
   if (!current) {
     endSession();
-    throw new ApiError("Please log in to continue.", 401);
+    throw new ApiError("Please log in to continue.", 401, {}, true);
   }
   if (!force && !isExpired(current.expiresAt)) return current;
 
@@ -155,7 +157,7 @@ async function freshSession(force: boolean): Promise<Session> {
   if (result.ok) return result.session;
   if (result.reason === "network") throw new ApiError(NETWORK_ERROR, 0);
   endSession();
-  throw new ApiError(SESSION_EXPIRED, 401);
+  throw new ApiError(SESSION_EXPIRED, 401, {}, true);
 }
 
 type RequestOptions = RequestInit & {
@@ -175,6 +177,7 @@ async function request<T>(path: string, { auth = false, ...init }: RequestOption
     if (res.status === 401) {
       const error = await toApiError(res);
       endSession();
+      error.sessionEnded = true;
       throw error;
     }
   }
@@ -265,4 +268,9 @@ export function parseId(value: string, entity: string) {
 
 export function errorMessage(error: unknown) {
   return error instanceof Error ? error.message : "Something went wrong.";
+}
+
+/** True when the error was already reported by the session-expired handler (no second toast needed). */
+export function isSessionEnded(error: unknown) {
+  return error instanceof ApiError && error.sessionEnded;
 }
