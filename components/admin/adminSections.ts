@@ -1,4 +1,4 @@
-import { Building2, FolderKanban, LayoutDashboard, ListTodo, LucideIcon, Tags } from "lucide-react";
+import { Building2, FolderKanban, LayoutDashboard, ListTodo, LucideIcon, Tags, Users } from "lucide-react";
 
 export interface AdminSection {
   href: string;
@@ -41,5 +41,12 @@ export const adminSections: AdminSection[] = [
     label: "Tags",
     description: "Create, edit and delete tags.",
     icon: Tags,
+  },
+  {
+    href: "/admin/accounts",
+    label: "Accounts",
+    description: "View accounts, change roles, delete accounts.",
+    icon: Users,
+    adminOnly: true,
   },
 ];
