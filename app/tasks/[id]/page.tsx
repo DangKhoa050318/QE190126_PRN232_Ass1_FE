@@ -20,6 +20,11 @@ function Row({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
+/** Audit info: the account that created / last changed the task (absent for seed data). */
+function AuditBy({ name }: { name: string | null }) {
+  return name ? <span className="text-slate-500"> · by {name}</span> : null;
+}
+
 export default function TaskDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { data: task, loading, error, errorStatus, reload } = useFetch(() => api.tasks.get(parseId(id, "Task")), [id]);
@@ -66,8 +71,14 @@ export default function TaskDetailPage() {
               <Row label="Active">
                 <ActiveBadge active={task.isActive} />
               </Row>
-              <Row label="Created">{formatDateTime(task.createdDate)}</Row>
-              <Row label="Last modified">{formatDateTime(task.modifiedDate)}</Row>
+              <Row label="Created">
+                {formatDateTime(task.createdDate)}
+                <AuditBy name={task.createdByName} />
+              </Row>
+              <Row label="Last modified">
+                {formatDateTime(task.modifiedDate)}
+                <AuditBy name={task.updatedByName} />
+              </Row>
             </dl>
           </div>
         )

@@ -143,7 +143,10 @@ export default function ManageTasksPage() {
                   <Link href={`/tasks/${t.taskId}`} className="font-medium text-slate-900 hover:text-indigo-600">
                     {t.title}
                   </Link>
-                  <p className="text-xs text-slate-500">{t.projectName}</p>
+                  <p className="text-xs text-slate-500">
+                    {t.projectName}
+                    {t.createdByName && <> · by {t.createdByName}</>}
+                  </p>
                 </Td>
                 <Td>
                   <TaskStatusBadge status={t.status} />
