@@ -2,12 +2,14 @@
 
 import { ArrowRight, Building2, FolderKanban, ListTodo, Search } from "lucide-react";
 import Link from "next/link";
+import { useAuth } from "@/components/auth/AuthProvider";
 import { ProjectCard } from "@/components/ProjectCard";
 import { EmptyState, ErrorState, LoadingState } from "@/components/ui/States";
 import { api } from "@/lib/api";
 import { useFetch } from "@/lib/useFetch";
 
 export default function HomePage() {
+  const { status } = useAuth();
   const { data, loading, error, reload } = useFetch(async () => {
     const [departments, projects, tasks] = await Promise.all([
       api.departments.list(),
@@ -19,7 +21,7 @@ export default function HomePage() {
 
   const stats = [
     { label: "Departments", value: data?.departments.length, icon: Building2, href: "/departments", color: "bg-sky-100 text-sky-700" },
-    { label: "Projects", value: data?.projects.length, icon: FolderKanban, href: "/projects/manage", color: "bg-violet-100 text-violet-700" },
+    { label: "Projects", value: data?.projects.length, icon: FolderKanban, href: "#projects", color: "bg-violet-100 text-violet-700" },
     { label: "Tasks", value: data?.tasks.length, icon: ListTodo, href: "/tasks", color: "bg-emerald-100 text-emerald-700" },
   ];
 
@@ -43,10 +45,10 @@ export default function HomePage() {
               <Search className="h-4 w-4" /> Find tasks
             </Link>
             <Link
-              href="/tasks/manage"
+              href={status === "authenticated" ? "/admin" : "/login"}
               className="inline-flex items-center gap-2 rounded-lg bg-indigo-500/40 px-4 py-2 text-sm font-semibold text-white ring-1 ring-white/30 hover:bg-indigo-500/60"
             >
-              Manage tasks <ArrowRight className="h-4 w-4" />
+              {status === "authenticated" ? "Open dashboard" : "Log in to manage"} <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </div>
@@ -76,7 +78,7 @@ export default function HomePage() {
             ))}
           </section>
 
-          <section>
+          <section id="projects" className="scroll-mt-24">
             <div className="mb-4 flex items-end justify-between">
               <div>
                 <h2 className="text-xl font-semibold text-slate-900">Active projects</h2>

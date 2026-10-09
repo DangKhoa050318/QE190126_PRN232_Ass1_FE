@@ -23,7 +23,7 @@ export default function TasksPage() {
         description="All active tasks across every project."
         actions={
           <Link
-            href="/tasks/manage"
+            href="/admin/tasks"
             className="inline-flex h-10 items-center gap-2 rounded-lg bg-white px-4 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-300 ring-inset hover:bg-slate-50"
           >
             <Settings2 className="h-4 w-4" /> Manage tasks
